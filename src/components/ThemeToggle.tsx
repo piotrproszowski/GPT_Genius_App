@@ -12,12 +12,18 @@ const ThemeToggle = () => {
   const [theme, setTheme] = useState(themes.winter);
 
   const toggleTheme = () => {
-    setTheme(theme === themes.winter ? themes.dracula : themes.winter);
+    const newTheme = theme === themes.winter ? themes.dracula : themes.winter;
+    document.documentElement.setAttribute("data-theme", newTheme);
+    setTheme(newTheme);
   };
 
   return (
     <div className='btn btn-sm btn-outline' onClick={toggleTheme}>
-      {theme === themes.winter ? <BsMoonFill /> : <BsSunFill />}
+      {theme === themes.winter ? (
+        <BsMoonFill className='w-4 h-4' />
+      ) : (
+        <BsSunFill className='w-4 h-4' />
+      )}
     </div>
   );
 
