@@ -3,18 +3,27 @@
 import { generateChatResponse } from "@/utils/action";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Chat = () => {
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
-
-  useMutation({
-    mutationFn: generateChatResponse,
+  const { mutate } = useMutation({
+    mutationFn: (query) => generateChatResponse([...messages, query]),
+    onSuccess: (data) => {
+      if (!data) {
+        toast.error("Something went wrong");
+      }
+      setMessages((prev) => [...prev, data]);
+    },
   });
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(text);
+    const query = { role: "user", text };
+    mutate(query);
+    setMessages((prev) => [...prev, query]);
+    setText("");
   };
   return (
     <div className='min-h-[calc(100vh-6rem)] grid grid-rows-[1fr,auto]'>
