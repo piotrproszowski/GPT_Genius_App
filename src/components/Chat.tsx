@@ -5,22 +5,29 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+interface ChatMessage {
+  role: "user" | "assistant" | "system";
+  content: string;
+}
+
 const Chat = () => {
   const [text, setText] = useState("");
-  const [messages, setMessages] = useState([]);
-  const { mutate } = useMutation({
-    mutationFn: (query) => generateChatResponse([...messages, query]),
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { mutate, isPending } = useMutation({
+    mutationFn: (query: ChatMessage) =>
+      generateChatResponse([...messages, query]),
     onSuccess: (data) => {
-      if (!data) {
+      if (!data || !("role" in data)) {
         toast.error("Something went wrong");
+        return;
       }
-      setMessages((prev) => [...prev, data]);
+      setMessages((prev) => [...prev, data as ChatMessage]);
     },
   });
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const query = { role: "user", text };
+    const query: ChatMessage = { role: "user", content: text };
     mutate(query);
     setMessages((prev) => [...prev, query]);
     setText("");
