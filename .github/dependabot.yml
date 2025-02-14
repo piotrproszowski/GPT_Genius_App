@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: "npm" # For Node.js projects
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    target-branch: "main"
+    versioning-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "automerge"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+
+  # If you also use other package managers, you can add them here
+  # For example, for GitHub Actions:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "automerge"
